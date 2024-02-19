@@ -1,0 +1,23 @@
+.listItem{
+    margin-left:"20px";
+    font-size:"14px";
+    color: "grey";
+    font-weight: "700";   
+}
+
+.slideImages{
+    /* color: "blue";  */
+    font-weight:"700";
+    font-size: "22px";
+    font-family: "Product Sans', Arial, sans-serif"
+}
+
+.list_item {
+    margin-right: 10px; 
+}
+
+.list_item:hover{
+    background-color: #F4F4F9;
+    border-radius: 0 20px 20px 0;
+    color: black;
+}
