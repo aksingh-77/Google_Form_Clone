@@ -1,8 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import '../css/QuestionForm.css'
 
-import CroporiginalIcon from '@mui/icons-material/Copyright';
-// import MorevertIcon from '@mui/icons-material/MoreVert';
 import Select from '@mui/material/Select';
 import Switch from '@mui/material/Switch';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
@@ -30,7 +28,7 @@ import CropOriginalIcon from '@mui/icons-material/Crop';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import  DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-// import Short from ''
+
 
 const QuestionForm = () => {
     const [questions, setQuestions] = useState([
@@ -39,7 +37,10 @@ const QuestionForm = () => {
          option: [{optionText:"Bengaluru"}, 
                  {optionText:"Mumbai"}, 
                  {optionText:"Delhi",}, 
-                 {optionText:"Uttar Pardesh"}], 
+                 {optionText:"Uttar Pardesh"}],
+         answer:false,
+         answerKey:"",
+         points:0, 
          open:true, 
          required: false
         }
@@ -157,155 +158,236 @@ const QuestionForm = () => {
 
     }
 
+    const setOptionAnswer = (ans, qno) => {
+        let Questions = [...questions];
+        Questions[qno].answerKey = ans;
+        setQuestions(Questions);
+    }
+
+    const setOptionPoints = (points, qno) => {
+        let Questions = [...questions];
+        Questions[qno].points = points;
+        setQuestions(Questions);
+        console.log("setted points", questions);
+    }
+
+    const doneAnswer = i => {
+        let Questions = [...questions];
+        Questions[i].answer = !Questions[i].answer;
+        setQuestions(Questions);
+        console.log('after done answer',questions);
+
+    }
+
+    const addAnswer = i => {
+        let Questions = [...questions];
+        console.log("Hello here")
+        Questions[i].answer = !Questions[i].answer;
+        setQuestions(Questions);
+        console.log(questions);
+    }
+
     
 
     function questionUI(){
         // return (<><h1>Question Bank</h1></>)
         
         return questions.map((ques, i) => (
-            // console.log(ques.questionText);
-            <Draggable key={i} draggableId={i + 'id'} index={i}>
-                {(provided, snapshot) => (
-                <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                >
+        <Draggable key={i} draggableId={i + 'id'} index={i}>
+            {(provided, snapshot) => (
+                <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                     <div>
                         <div style={{marginBottom: "0px"}}>
                             <div style={{width: '100%', marginBottom: '0px' }}>
-                                <DragIndicatorIcon style={{transform: "rotate(-90deg)", color: "#DAE0E2",
-                                    position: "relative", left: "300px"}} fontSize="small"/>
+                                <DragIndicatorIcon style={{transform: "rotate(-90deg)", color: "#DAE0E2", position: "relative", left: "300px"}} fontSize="small"/>
                             </div>
-                <Accordion expanded={ques.open} className={ques.open ? "add_border":""} onChange={()=>handleExpand(i)}>
-                <AccordionSummary aria-controls='panelia-content' id='panelia-header' elevation={1} style={{width:'100%'}}>
-                {!ques.open ? (
-                    <div className="saved_questions">
-                        {/* To show the question here */}
-                        <Typography style={{fontSize: "15px", fontweight: "400", letterSpacing: '1px',lineHeight: '24px', paddingBottom: "8px"}} >
-                            {i+1}. {ques.questionText}
-                        </Typography> 
+
+                            {/*================================To Display Question and its option============================================*/} 
+                            <Accordion expanded={ques.open} className={ques.open ? "add_border":""} onChange={()=>handleExpand(i)}>
+                                <AccordionSummary aria-controls='panelia-content' id='panelia-header' elevation={1} style={{width:'100%'}}>
+                                    {!ques.open ? (
+                                        <div className="saved_questions">
+                                            <Typography style={{fontSize: "15px", fontweight: "400", letterSpacing: '1px',lineHeight: '24px', paddingBottom: "8px"}} >
+                                                {i+1}. {ques.questionText}
+                                            </Typography>                     
+                                            {ques.option.map((op, j)=>(
+                                                <div key={j} >
+                                                    <div style={{display: 'flex'}}>
+                                                        <FormControlLabel style={{marginLeft: "5px",marginBottom: "5px"}} disabled control={<input type={ques.questionType}
+                                                            color="primary" style={{marginRight: '3px'}} required={ques.required} />} 
+                                                            label={
+                                                                <Typography style={{fontFamily: 'Roboto, Arial, sans-serif',
+                                                                    fontSize: '13px',fontweight: '400',letterspacing: '.2px',lineHeight: '20px', color:'#202124'}} >
+                                                                    {op.optionText}
+                                                                </Typography>
+                                                            } />     
+                                                    </div>
+                                                </div>
+                                            
+                                            ))}
+                                        </div>
+                                    ) : ""}
+                                </AccordionSummary>
+                                {/*==============================================================================================================*/}
+
+
                         
-
+                                {/* ===========================Add New Questions from here====================================================== */}
                         
-                        {ques.option.map((op, j)=>(
-                            <div key={j} >
-                                <div style={{display: 'flex'}}>
-                                    <FormControlLabel style={{marginLeft: "5px",marginBottom: "5px"}} disabled control={<input type={ques.questionType}
-                                        color="primary" style={{marginRight: '3px'}} required={ques.required} />} 
-                                        label={
-                                            <Typography style={{fontFamily: 'Roboto, Arial, sans-serif',
-                                                fontSize: '13px',fontweight: '400',letterspacing: '.2px',lineHeight: '20px', color:'#202124'}} >
-                                                {op.optionText}
-                                            </Typography>
-                                        } />     
-                                </div>
-                            </div>
-                        
-                        ))}
-                    </div>
-                ) : ""}
-                </AccordionSummary>
+                                <div className='question_boxs'>
+                                    {!questions[i].answer ? (
+                                        <AccordionDetails className='add_question'>
+                                            {/*==================to add question and select its answer type==============================*/}
+                                            <div className="add_question_top">
+                                                {i+1} <input type="text" className="question" placeholder="Question" value={ques.questionText} onChange={(e) => {ChangeQuestion(e.target.value, i)}}></input>
+                                                <ImageOutlinedIcon style={{color: "#5f6368"}} />
+                                                <Select className="select" style={{color: "#5f6368", fontSize:"13px"}} >
+                                                    <MenuItem id="text" value="Text" onClick={() => addQuestionType(i, "text")}> <SubjectIcon style={{marginRight: "10px"}} /> Paragraph</MenuItem>
+                                                    <MenuItem id="checkbox" value="Checkbox" onClick={() => addQuestionType(i, "checkbox")}><CheckBoxIcon style={{marginRight:"10px",color: "#70757a"}} checked />CheckBox </MenuItem>
+                                                    <MenuItem id="radio" value="Radio" onClick={() => addQuestionType(i, "radio")}> <Radio style={{marginRight: "10px",color: "#70757a"}} checked /> Multiple Choice </MenuItem>
+                                                </Select>
+                                            </div>
+                                            {/*=================================================================================================*/}
+                                    
 
 
-             
-                {/* Here it is to create the questions tab from here */}
-            { questions[i].open ? (
-                <div className='question_boxs'>
-                    <AccordionDetails className='add_question'>
-                        <div className="add_question_top">
-                            {i+1}
-                            <input type="text" className="question" placeholder="Question" value={ques.questionText} onChange={(e) => {ChangeQuestion(e.target.value, i)}}></input>
-                            <ImageOutlinedIcon style={{color: "#5f6368"}} />
-                            <Select className="select" style={{color: "#5f6368", fontSize:"13px"}} >
-                                <MenuItem id="text" value="Text" onClick={() => addQuestionType(i, "text")}> <SubjectIcon style={{marginRight: "10px"}} /> Paragraph</MenuItem>
-                                <MenuItem id="checkbox" value="Checkbox" onClick={() => addQuestionType(i, "checkbox")}><CheckBoxIcon style={{marginRight:"10px",color: "#70757a"}} checked />CheckBox </MenuItem>
-                                <MenuItem id="radio" value="Radio" onClick={() => addQuestionType(i, "radio")}> <Radio style={{marginRight: "10px",color: "#70757a"}} checked /> Multiple Choice </MenuItem>
-                            </Select>
-                        </div>
-                        
-                         {ques.option.map((op, j)=>(
-                            <div className="add_question_body" key={j}>
-                            {
-                                (ques.questionType!="text") ?
-                                <input type={ques.questionType} style={{marginRight:"10px"}}/> :
-                                <ShortTextIcon style={{marginRight: "10px"}} />
-                            } 
-                            <div>
-                                <input type="text" className="text_input" placeholder="option" value={op.optionText} onChange={(e) => changeOptionValue(e.target.value, i, j)}/>
-                            </div>
+                                            {/**===========================To add options from here============================================= */}
+                                            {ques.option.map((op, j)=>(
+                                                <div className="add_question_body" key={j}>
+                                                    {
+                                                        (ques.questionType!="text") ?
+                                                        <input type={ques.questionType} style={{marginRight:"10px"}}/> :
+                                                        <ShortTextIcon style={{marginRight: "10px"}} />
+                                                    } 
+                                                    <div>
+                                                        <input type="text" className="text_input" placeholder="option" value={op.optionText} onChange={(e) => changeOptionValue(e.target.value, i, j)}/>
+                                                    </div>
 
-                             <ImageOutlinedIcon style={{color: "#5f6368"}}/>
+                                                    <ImageOutlinedIcon style={{color: "#5f6368"}}/>
 
-                            <IconButton aria-label="delete" >
-                                <CloseIcon onClick={() => removeOption(i, j)}/>
-                            </IconButton>
-                            </div>
+                                                    <IconButton aria-label="delete" >
+                                                        <CloseIcon onClick={() => removeOption(i, j)}/>
+                                                    </IconButton>
+                                                </div>
+                                            ))} 
+                                            {/*==============================================================================================*/}
+                                    
+
+                                            {/*============================To show Add Option Button============================================*/}        
+                                            {ques.option.length < 5 ?
+                                                <div className="add_question_body">
+                                                    <FormControlLabel disabled 
+                                                    control={(ques.questionType!="text") ?
+                                                        <input type={ques.questionType} color="primary" inputProps={{ 'aria-label': 'secondary checkbox' }}
+                                                        style={{marginLeft: "10px",marginRight:"10px"}} disabled /> 
+                                                    :
+                                                        <ShortTextIcon style={{marginRight:"10px"}} />
+                                                    } 
+                                            
+                                                    label={<div>
+                                                                <input type="text" className="text_input" style={{fontSize: "13px",width: "60px"}} placeholder="Add other" ></input>
+                                                                <Button size="small" style={{textTransform: 'none', color: "#4285f4", fontSize: "13px", fontweight: "600"}} onClick={() => addOption(i)}>Add Option</Button>
+                                                            </div>
+                                                            } />
+                                                </div>
+                                            :""}
+                                            {/*========================================================================================================*/}
 
 
-                        ))} 
-                         
 
-                        {ques.option.length < 5 ?
-                            <div className="add_question_body">
-                                <FormControlLabel disabled control={(ques.questionType!="text") ?
-                                    <input type={ques.questionType} color="primary" inputProps={{ 'aria-label': 'secondary checkbox' }}
-                                            style={{marginLeft: "10px",marginRight:"10px"}} disabled /> :
+                                            {/*===================================Footer section of question card======================================*/}                    
+                                            <div className="add_footer">
+                                                <div className="add_question_bottom_left">
+                                                    <Button size="small" style={{textTransform: 'none', color: "#4285f4", fontsize: "13px", fontweight:"600"}} onClick={() => addAnswer(i)}>
+                                                        <FcRightUp style={{border:"2px solid #4285f4", padding: "2px", marginRight: "8px"}} /> Answer key
+                                                    </Button>
+                                                </div>
 
-                                    <ShortTextIcon style={{marginRight:"10px"}} />
-                                } 
-                                
-                                label={<div>
-                                    <input type="text" className="text_input" style={{fontSize: "13px",width: "60px"}} placeholder="Add other" ></input>
-                                    <Button size="small" style={{textTransform: 'none', color: "#4285f4", fontSize: "13px", fontweight: "600"}} onClick={() => addOption(i)}>Add Option</Button>
-                                </div>
-                                } />
-                            </div>
-                        :""}
+                                                <div className="add_question_bottom">
+                                                    <IconButton aria-label="Copy" onClick={() => copyQuestion(i)}>
+                                                        <FilterNoneIcon />
+                                                    </IconButton>
+                                                    <IconButton aria-label="delete" onClick={() => deleteQuestion(i)}>
+                                                        <BsTrash />
+                                                    </IconButton>
+                                                        <span style={{color: "#5f6368", fontSize: "13px"}}>Required </span> <Switch name="checkedA" color="primary" onClick={()=>requiredQuestion(i)} />
+                                                    <IconButton>
+                                                        <MorevertIcon />
+                                                    </IconButton>
+                                                </div>
+                                            </div>
+                                            {/*============================================================================================*/}
+                                        </AccordionDetails>   
+                                    ):(
+                                        <AccordionDetails className='add_question'>
+                                            {console.log("Not able to proceed frmo here")}
+                                            <div className='top_header'>
+                                                Choose Correct Answer
+                                            </div>
 
-                        <div className="add_footer">
-                            <div className="add_question_bottom_left">
-                                <Button size="small" style={{textTransform: 'none', color: "#4285f4", fontsize: "13px", fontweight:"600"}}>
-                                <FcRightUp style={{border:"2px solid #4285f4", padding: "2px", marginRight: "8px"}} /> Answer key</Button>
-                            </div>
+                                            <div>
+                                                <div className="add_question_top">
+                                                    < input type="text" className="question " placeholder="Question" value={ques.questionText} disabled/>
+                                                    <input type="number" className="points" min="0" step="1" placeholder="0" onChange={e=> setOptionPoints(e.target.value, i)} />
+                                                </div>
+                                                {/*================================================================================================================*/}
+                                                {ques.option.map((op, j)=>(
+                                                    <div className="add_question_body" key={j} style={{marginLeft: "8px", marginBottom: "10px",marginTop: "5px"}}>
+                                                        <div key={j}>
+                                                            <div style={{display: 'flex'}} className="">
+                                                                <div className="form-check">
+                                                                    <label style={{fontSize: "13px"}} onClick={()=>setOptionAnswer(ques.option[j].optionText, i)}>
+                                                                        {(ques.questionType!="text") ?
+                                                                            <input type={ques.questionType} name={ques.questionText} value="Option 3"
+                                                                                className="form-check-input" required ={ques.required}
+                                                                                style={{marginRight:"10px",marginBottom: "10px",marginTop: "5px"}} 
+                                                                            />
+                                                                        : 
+                                                                            <ShortTextIcon style={{marginRight:"10px"}} />
+                                                                        }
+                                                                        {ques.option[j].optionText}
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                                {/*================================================================================================================*/}
 
-                            <div className="add_question_bottom">
 
-                                <IconButton aria-label="Copy" onClick={() => copyQuestion(i)}>
-                                    <FilterNoneIcon />
-                                </IconButton>
+                                                {/*==================================================================================================================*/}                        
+                                                <div className="add_question_body">
+                                                    <Button size="small" style={{textTransform: 'none', color: "#4285f4", fontSize:"13px", fontweight: "600"}}>
+                                                        <BsFileText style={{fontSize: "20px",marginRight: "8px"}}/>Add Answer Feedback
+                                                    </Button>
+                                                </div>
+                                                <div className="add_question_bottom">
+                                                    <Button variant="outlined" color="primary" style={{textTransform:'none', color: "#4285f4", fontSize: "12px",marginTop: "12px", fontWeight:"200"}}
+                                                        onClick={()=>doneAnswer(i)}>Done
+                                                    </Button>
+                                                </div>
+                                                {/*====================================================================================================================*/}
+                                            </div>
 
-                                <IconButton aria-label="delete" onClick={() => deleteQuestion(i)}>
-                                    <BsTrash />
-                                </IconButton>
+                                        </AccordionDetails>
+                                    )}
 
-                                    <span style={{color: "#5f6368", fontSize: "13px"}}>Required </span> <Switch name="checkedA" color="primary" onClick={()=>requiredQuestion(i)} />
-                                <IconButton>
-                                    <MorevertIcon />
-                                </IconButton>
-
-                         
-                            </div>
-                        </div>
-                    
-                    </AccordionDetails>
-
-                    <div className="question_edit">
-                        <AddCircleOutlineIcon className="edit" onClick={addMoreQuestionField} />
-                        <OndemandVideoIcon className="edit" />
-                        <CropOriginalIcon className="edit" />
-                        <TextFieldsIcon className="edit" />
-                    </div> 
-                </div> 
-            ):""}
-                
-            </Accordion>
-
+                                    {!ques.answer ? (            
+                                        <div className="question_edit">
+                                            <AddCircleOutlineIcon className="edit" onClick={addMoreQuestionField} />
+                                            <OndemandVideoIcon className="edit" />
+                                            <CropOriginalIcon className="edit" />
+                                            <TextFieldsIcon className="edit" />
+                                        </div> 
+                                    ):""}
+                                </div>         
+                            </Accordion>
+                            {/*=============================closing of Accodrion============================================================================*/}
                         </div>
                     </div>
                 </div>
-                )}
-            </Draggable>
+            )}
+        </Draggable>
         ))
     }
 
