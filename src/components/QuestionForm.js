@@ -28,7 +28,7 @@ import CropOriginalIcon from '@mui/icons-material/Crop';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import  DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-
+import axios from 'axios';
 
 const QuestionForm = () => {
     const [questions, setQuestions] = useState([
@@ -46,6 +46,18 @@ const QuestionForm = () => {
         }
     ])
 
+    const [documentName, setDocumentName] = useState("Untitled Document");
+    const [documentDesc, setDocumentDesc] = useState("Add Description");
+
+    const getId = () => {
+        let currentURL = window.location.href;
+        let parts = currentURL.split('/');
+        let value = parts[parts.length - 1];
+        console.log(value);
+        return value;
+    }
+
+    
     function ChangeQuestion(text, i){
         var newQuestion = [...questions];
         newQuestion[i].questionText = text;
@@ -185,6 +197,20 @@ const QuestionForm = () => {
         Questions[i].answer = !Questions[i].answer;
         setQuestions(Questions);
         console.log(questions);
+    }
+
+    let id = getId();
+    const commitToDB = () => {
+        axios.post(`http://127.0.0.1:9000/add_questions/${id}`,{
+            "document_name":documentName,
+            "doc_desc":documentDesc,
+            "questions":questions,   
+        }).then(response => {
+            console.log(response.data);
+        }).catch(err =>{
+            console.log(err);
+        })
+
     }
 
     
@@ -398,8 +424,8 @@ const QuestionForm = () => {
                 <div className="section">
                     <div className="question_title_section">
                         <div className="question_form_top">
-                            <input type="text" className="question_form_top_name" style={{color: "black"}} placeholder="Untitled document" ></input>
-                            <input type="text" className="question_form_top_desc" placeholder="Form Description" ></input>
+                            <input type="text" className="question_form_top_name" style={{color: "black"}} placeholder="Untitled document" onChange={e => setDocumentName(e.target.value)}></input>
+                            <input type="text" className="question_form_top_desc" placeholder="Form Description" onChange={e => setDocumentDesc(e.target.value)}></input>
                         </div>
                     </div>
 
@@ -415,6 +441,9 @@ const QuestionForm = () => {
                             )}
                         </Droppable>
                     </DragDropContext>
+                    <div className='save_form'>
+                         <Button variant='contained' color='primary' onClick={commitToDB} style={{fontSize:"14px", marginTop:"13px"}}>Save</Button>      
+                    </div>
 
 
                     

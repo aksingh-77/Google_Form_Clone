@@ -51,7 +51,8 @@
     flex-direction: row;
     justify-content: center;
     }
-    .add_question{
+
+.add_question{
     background-color: white;
     border-radius: 8px;
     padding:25px 22px;
@@ -59,7 +60,7 @@
     display: flex;
     flex-direction: column;
     padding-top:0px;
-    width:93%;
+    width:90%;
     margin-left:10px;
     }
 
@@ -113,13 +114,14 @@ padding:10px;
 .add_question_body{
     display:flex;
     align-items: center;
+    
  }
 
 .text_input{
     outline: none;
     border:none;
     height:40px;
-    width:490px;
+    width:25rem;
     font-family: Roboto, Arial, sans-serif;
     font-size: 13px;
     font-weight: 400;

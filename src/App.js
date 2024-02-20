@@ -7,16 +7,22 @@ import { BrowserRouter, Routes,Route } from 'react-router-dom';
 import Formheader from './components/Formheader';
 import CenteredTabs from './components/CenteredTabs';
 import QuestionForm from './components/QuestionForm';
+import { StateProvider } from './redux/StateProvider';
+import reducer, {initialstate} from './redux/reducer';
+
+
 
 function App() {
   return (
-    <div className="App">
+    <div className="App"> 
+      <StateProvider initialstate={initialstate} reducer={reducer}>
       <BrowserRouter>
       <Routes>
         <Route path='/form/:id?' element={<><Formheader/><CenteredTabs/><QuestionForm/></>} />
         <Route path='/' element={<><Header/><Template/><MainBody/></>}/>
       </Routes>
       </BrowserRouter>
+      </StateProvider>
     </div>
   );
 }

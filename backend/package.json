@@ -1,0 +1,21 @@
+{
+  "name": "google_form",
+  "version": "1.0.0",
+  "description": "This is the backend for the google form",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Node.js",
+    "express.js",
+    "JavaScript",
+    "Google_form_clone"
+  ],
+  "author": "Abhishek Singh",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express.js": "^1.0.0"
+  }
+}
