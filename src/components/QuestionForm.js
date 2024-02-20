@@ -28,6 +28,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import CropOriginalIcon from '@mui/icons-material/Crop';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import  DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 // import Short from ''
 
 const QuestionForm = () => {
@@ -86,8 +88,9 @@ const QuestionForm = () => {
     }
 
     const copyQuestion = i => {
+        expandCloseAll()
         let qs = [...questions];
-        let newQuestion = qs[i];
+        let newQuestion = {...qs[i]};
         setQuestions([...questions, newQuestion]);
     }
 
@@ -108,15 +111,73 @@ const QuestionForm = () => {
 
     const addMoreQuestionField = () => {
         //let qs = [...questions];
+        expandCloseAll()
         setQuestions([...questions, {questionText:"Question", questionType:"radio",option:[{optionText:"Option 1"}], open: true, required: false}])
     }
+
+    const onDragEnd = result => {
+        if(!result.destination){
+            return;
+        }
+        let itemgg = [...questions];
+        const itemF = reorder(
+            itemgg,
+            result.source.index,
+            result.destination.index
+        );
+        setQuestions(itemF)
+    }
+
+    const reorder = (list, startIndex, endIndex) => {
+        const result = Array.from(list);
+        const [removed] = result.splice(startIndex, 1);
+        result.splice(endIndex, 0, removed)
+        return result;
+    }
+
+
+    const expandCloseAll = () => {
+        let qs = [...questions];
+        for(let j = 0; j<qs.length; j++){
+            qs[j].open = false;
+        }
+        setQuestions(qs);
+    }
+
+    const handleExpand = (i)=>{
+        let qs = [...questions];
+        for(let j = 0; j < qs.length; j++){
+            if(i === j){
+                qs[i].open = true;
+            }else{
+                qs[j].open = false;
+            }
+        }
+        setQuestions(qs);
+
+    }
+
+    
 
     function questionUI(){
         // return (<><h1>Question Bank</h1></>)
         
         return questions.map((ques, i) => (
             // console.log(ques.questionText);
-            <Accordion expanded={ques.open} className={ques.open ? "add_border":""}>
+            <Draggable key={i} draggableId={i + 'id'} index={i}>
+                {(provided, snapshot) => (
+                <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                >
+                    <div>
+                        <div style={{marginBottom: "0px"}}>
+                            <div style={{width: '100%', marginBottom: '0px' }}>
+                                <DragIndicatorIcon style={{transform: "rotate(-90deg)", color: "#DAE0E2",
+                                    position: "relative", left: "300px"}} fontSize="small"/>
+                            </div>
+                <Accordion expanded={ques.open} className={ques.open ? "add_border":""} onChange={()=>handleExpand(i)}>
                 <AccordionSummary aria-controls='panelia-content' id='panelia-header' elevation={1} style={{width:'100%'}}>
                 {!ques.open ? (
                     <div className="saved_questions">
@@ -149,6 +210,7 @@ const QuestionForm = () => {
 
              
                 {/* Here it is to create the questions tab from here */}
+            { questions[i].open ? (
                 <div className='question_boxs'>
                     <AccordionDetails className='add_question'>
                         <div className="add_question_top">
@@ -225,6 +287,7 @@ const QuestionForm = () => {
                          
                             </div>
                         </div>
+                    
                     </AccordionDetails>
 
                     <div className="question_edit">
@@ -233,9 +296,16 @@ const QuestionForm = () => {
                         <CropOriginalIcon className="edit" />
                         <TextFieldsIcon className="edit" />
                     </div> 
-                </div>
+                </div> 
+            ):""}
                 
             </Accordion>
+
+                        </div>
+                    </div>
+                </div>
+                )}
+            </Draggable>
         ))
     }
 
@@ -250,7 +320,22 @@ const QuestionForm = () => {
                             <input type="text" className="question_form_top_desc" placeholder="Form Description" ></input>
                         </div>
                     </div>
-                    {questionUI()}
+
+                    <DragDropContext onDragEnd={onDragEnd} >
+                        <Droppable droppableId='droppable'>
+                            {(provided, snapshot) => (
+                                <div {...provided.droppableProps}
+                                    ref={provided.innerRef}
+                                >
+                                    {questionUI()}
+                                    {provided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
+                    </DragDropContext>
+
+
+                    
                 </div>
             </div>
 
