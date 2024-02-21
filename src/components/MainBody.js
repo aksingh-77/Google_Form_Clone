@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import '../MainBody.css';
+import '../css/MainBody.css';
 
 import StorageIcon from '@mui/icons-material/Storage';
 import ArrowDrapDownIcon from '@mui/icons-material/ArrowDropDown';

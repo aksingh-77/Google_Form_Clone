@@ -24,15 +24,69 @@ app.post(`/add_questions/:doc_id`,(req, res)=>{
     res.send("Saved Data Successfully");
 })
 
-app.get('/data/:doc_id',(req, res) => {
-    let docId = req.params.doc_id;
-    fs.readFile(`files/${docId}.json`,(err, data) => {
-        if(err) throw err;
-        let ques_data = JSON.parse(data);
-        console.log(req.params.doc_id)
-        res.send(ques_data);
-    })
-})
+// app.get('/data/:doc_id',(req, res) => {
+//     let docId = req.params.doc_id;
+//     let ques_data = [
+//         {questionText: "Question here", 
+//          questionType:"radio", 
+//          option: [{optionText:"Option 1"}, 
+//                  {optionText:"Option 2"}, 
+//                  ],
+//          answer:false,
+//          answerKey:"",
+//          points:0, 
+//          open:true, 
+//          required: false
+//         }];
+//     const exists = fs.existsSync(`files/${docId}.json`);
+//     if(exists){
+//         fs.readFile(`files/${docId}.json`,(err, data) => {
+//             if(err){ 
+//                 console.log(err);
+//             }
+//             ques_data = JSON.parse(data);
+//             console.log(req.params.doc_id)
+//             res.send(ques_data);
+//         })
+//     }else{
+//         console.log(ques_data);
+//         res.send(ques_data)
+//     }
+// })
+
+app.get('/data/:doc_id', (req, res) => {
+    const docId = req.params.doc_id;
+    const filePath = `files/${docId}.json`;
+
+    if (fs.existsSync(filePath)) {
+        fs.readFile(filePath, (err, data) => {
+            if (err) {
+                console.error(`Error reading file: ${err}`);
+                res.status(500).send('Internal Server Error');
+            } else {
+                const ques_data = JSON.parse(data);
+                console.log(`Data found for doc_id: ${docId}`);
+                res.send(ques_data);
+            }
+        });
+    } else {
+        console.log(`File not found for doc_id: ${docId}`);
+        const defaultData = {"document_name":"Untitled Document",
+        "doc_desc":"Add Description",
+        "questions":[{"questionText":"Question here",
+                    "questionType":"radio",
+                    "option":[{"optionText":"Option 1"},
+                                {"optionText":"Option 2"}],
+                    "answer":false,
+                    "answerKey":"Bengaluru",
+                    "points":"2",
+                    "open":true,
+                    "required":false
+                }]
+            };
+        res.send(defaultData);
+    }
+});
 
 app.get('/get_all_filenames',(req,res) => {
     const directoryPath = path.join(__dirname,'/files');

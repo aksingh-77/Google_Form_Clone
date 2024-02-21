@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import '../css/QuestionForm.css'
 
 import Select from '@mui/material/Select';
@@ -30,14 +30,17 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import  DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import axios from 'axios';
 
+//import { useStateValue } from '../redux/StateProvider';
+import { actionTypes } from '../App';
+import { StateContext } from '../App';
+
 const QuestionForm = () => {
     const [questions, setQuestions] = useState([
-        {questionText: "What is capital of India ?", 
+        {questionText: "Question ", 
          questionType:"radio", 
-         option: [{optionText:"Bengaluru"}, 
-                 {optionText:"Mumbai"}, 
-                 {optionText:"Delhi",}, 
-                 {optionText:"Uttar Pardesh"}],
+         option: [{optionText:"Option 1"}, 
+                 {optionText:"Option 2"}, 
+                 {optionText:"Option 3"}],
          answer:false,
          answerKey:"",
          points:0, 
@@ -48,6 +51,8 @@ const QuestionForm = () => {
 
     const [documentName, setDocumentName] = useState("Untitled Document");
     const [documentDesc, setDocumentDesc] = useState("Add Description");
+    const stateContext = useContext(StateContext);
+    // console.log(stateContext);
 
     const getId = () => {
         let currentURL = window.location.href;
@@ -201,6 +206,13 @@ const QuestionForm = () => {
 
     let id = getId();
     const commitToDB = () => {
+        console.log("before dispatch");
+        stateContext.dispatch({
+            type: actionTypes.SET_QUESTIONS,
+            questions:questions
+        })
+        console.log("after dispatch");
+
         axios.post(`http://127.0.0.1:9000/add_questions/${id}`,{
             "document_name":documentName,
             "doc_desc":documentDesc,
@@ -213,11 +225,46 @@ const QuestionForm = () => {
 
     }
 
-    
+    useEffect (()=>{ 
+        async function data_adding(){ 
+            const request = await axios.get( `http://localhost:9000/data/${id}`);
+            setQuestions(request.data.questions);
+            console.log("request data from api",request.data)
+            const doc_name=request.data.document_name ||"Untitled Document"
+            const doc_descip = request.data.doc_desc || "Form Description"
+            console.log(doc_name+" "+doc_descip)
+            setDocumentName(doc_name)
+            setDocumentDesc (doc_descip)
+            let question_data = [...questions]
+            console.log("onsole log within useEffect",questions);
+            stateContext.dispatch({
+                type: actionTypes.SET_DOC_NAME,
+                doc_name: doc_name
+            })
+            stateContext.dispatch({
+                type: actionTypes.SET_DOC_DESC,
+                doc_desc: doc_descip
+            })
+            stateContext.dispatch({
+                type: actionTypes.SET_QUESTIONS,
+                questions: question_data
+            })
+        }
+        data_adding()
+        }, [])
 
+        function changeQuestion (text, i){
+            var newQuestion = [...questions];
+            newQuestion[i].questionText = text;
+            setQuestions (newQuestion);
+            console.log(newQuestion)
+        }
+
+    
+        //setQuestions(question_data || questions);
     function questionUI(){
         // return (<><h1>Question Bank</h1></>)
-        
+        console.log({questions})
         return questions.map((ques, i) => (
         <Draggable key={i} draggableId={i + 'id'} index={i}>
             {(provided, snapshot) => (

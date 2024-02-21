@@ -1,5 +1,5 @@
 import React from 'react';
-import '../CenteredTabs.css';
+import '../css/CenteredTabs.css';
 import {makeStyles} from '@mui/styles';
 import Paper from '@mui/material/Paper';
 import Tabs from '@mui/material/Tabs';

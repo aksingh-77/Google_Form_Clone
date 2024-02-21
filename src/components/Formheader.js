@@ -1,5 +1,5 @@
-import React from "react";
-import '../Formheader.css';
+import React,{useContext} from "react";
+import '../css/Formheader.css';
 import form_image from "../images/google_form.svg";
 import {Fistar, Fisettings, FiStar} from "react-icons/fi"
 import {AioutlineEye} from 'react-icons/ai';
@@ -11,17 +11,30 @@ import { AiOutlineEye } from "react-icons/ai";
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import { FiSettings } from "react-icons/fi";
+//import { useStateValue } from "../redux/StateProvider";
+import {useNavigate} from 'react-router-dom';
+import { StateContext } from "../App";
+
+
 
 
 
 
 
 const Formheader = () => {
+    const navigate = useNavigate();
+    //const [{doc_name}, dispatch] = useStateValue();
+    const stateContext = useContext(StateContext);
+    const doc_name = stateContext.initialstate.document_name;
+    const dispatch = stateContext.dispatch;
+
+
+    
     return (
         <div className="form_header">
             <div className="form_header_left">
                 <img src={form_image} style={{height:"45px", width:"40px"}} />
-                <input type="text" placeholder="Untitled form" className="form_name"></input>
+                <input type="text" placeholder="Untitled form" className="form_name" value={doc_name}></input>
                 <IoMdFolderOpen className="form_header_icon" style={{marginRight:"10px"}}></IoMdFolderOpen>
                 <FiStar className="form_header_icon" style={{marginRight:"10px"}} />
                 <span style={{fontSize:"12px", fontWeight:"600"}}>All changes saved in Drive</span>
@@ -31,7 +44,7 @@ const Formheader = () => {
                 <IconButton>
                     <ColorLensIcon Lens Icon size="small" className="form_header_icon"/>
                 </IconButton>
-                <IconButton>
+                <IconButton onClick={() => navigate('/response')}>
                     <AiOutlineEye className="form_header_icon" />
                 </IconButton>
                 <IconButton>

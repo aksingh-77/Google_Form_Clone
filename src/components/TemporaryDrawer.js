@@ -9,7 +9,7 @@ import Divider from '@mui/material/Divider';
 import {FiSettings} from 'react-icons/fi'
 import {BsQuestionCircle} from 'react-icons/bs'
 
-import './TemporaryDrawer.css';
+import '../css/TemporaryDrawer.css';
 
 
 import docs from '../images/docs.svg';

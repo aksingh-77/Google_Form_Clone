@@ -1,1 +1,0 @@
-{"document_name":"Hello","doc_desc":"Initial testing","questions":[{"questionText":"What is capital of India ?","questionType":"radio","option":[{"optionText":"Bengaluru"},{"optionText":"Mumbai"},{"optionText":"Delhi"},{"optionText":"Uttar Pardesh"}],"answer":false,"answerKey":"Bengaluru","points":"4","open":true,"required":false}]}
