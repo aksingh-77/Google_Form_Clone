@@ -1,25 +1,24 @@
 import { Button, Typography } from '@mui/material'
 import React ,{useState,useEffect, useContext} from 'react'
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Radio from '@mui/material/Radio';
-
 import {useNavigate} from 'react-router-dom';
-
 import "../css/Userform.css"
 import axios from "axios"
 import { StateContext } from '../App';
+
+
 function Userform() {
     let quest = [];
     let post_answer = [];
     let navigate = useNavigate()
     let [answer,setAnswer] = useState([])
-    const stateContext = useContext(StateContext);
+    const { initialstate, dispatch } = useContext(StateContext);
+
+    //{ERROR HERE AS THE DATA FETCHED IS EMPTY WHICH IS PASSED FROM APP.JS}
+    const questions =  initialstate?.map(({questions})=> questions) || [];
+    console.log({initialstate});
+    const doc_name = initialstate.doc_name || "Untitled Document";
+    const doc_desc = initialstate.doc_desc || "Add form description";
     
-    console.log(stateContext.initialstate.questions);
-    const questions = stateContext.initialstate.questions;
-    const doc_name = stateContext.initialstate.doc_name;
-    const doc_desc = stateContext.initialstate.doc_desc;
-    const dispatch = stateContext.dispatch;
     console.log("questions from userform after redux",questions)
 
     function select(que,option){
@@ -29,14 +28,15 @@ function Userform() {
 }
 
  useEffect(()=>{
-        questions.map((q)=>{
+        
+        questions?.map((q)=>{
             answer.push({
             "question": q.questionText,
             "answer" : " "
             })
             
         })
-        questions.map((q,qindex)=>{
+        questions?.map((q,qindex)=>{
             quest.push(    {"header": q.questionText, "key": q.questionText })
         })
 },[])
@@ -71,7 +71,7 @@ function Userform() {
 
 
 function submit(){
-   answer.map((ele)=>{
+   answer?.map((ele)=>{
     post_answer_data[ele.question] = ele.answer
    })
    
@@ -90,15 +90,14 @@ function submit(){
                 <div className="user_title_section">
                     <Typography style={{fontSize:"26px"}} >{doc_name}</Typography>
                     <Typography style={{fontSize:"15px"}} >{doc_desc}</Typography>
-
                 </div>
               
                 {
-                questions.map((question,qindex)=>(
+                questions?.map((question,qindex)=>(
                     <div className="user_form_questions">
                     <Typography  style={{fontSize:"15px",fontWeight:"400",letterSpacing: '.1px',lineHeight:'24px',paddingBottom:"8px",fontSize:"14px"}} >{qindex+1}.  {question.questionText}</Typography>
                     {
-                            question.options.map((ques,index)=>(
+                            question?.option.map((ques,index)=>(
                               
                               <div key={index} style={{marginBottom:"5px"}}>
                                   <div style={{display: 'flex'}}>

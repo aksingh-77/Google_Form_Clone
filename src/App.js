@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 // import './App.css';
-import React, {useReducer} from 'react';
+import React, {useReducer, useState} from 'react';
 import Header from './components/Header';
 import Template from './components/Template';
 import MainBody from './components/MainBody';
@@ -12,19 +12,9 @@ import QuestionForm from './components/QuestionForm';
 //import reducer, {initialstate} from './redux/reducer';
 import Userform from './components/Userform';
 
-export const initialstate = [{"doc_name":"Untitled Document",
-"doc_desc":"Add Description",
-"questions":[{"questionText":"Question here",
-            "questionType":"radio",
-            "option":[{"optionText":"Option 1"},
-                        {"optionText":"Option 2"}],
-            "answer":false,
-            "answerKey":"Bengaluru",
-            "points":"2",
-            "open":true,
-            "required":false
-        }]
-    }]
+export const initialState = [];
+  
+
 
 export const actionTypes = {
   SET_QUESTIONS: "SET_QUESTIONS",
@@ -34,11 +24,13 @@ export const actionTypes = {
 }
 
 const reducer = (state, action) => {
+
   switch(action.type){
-    case actionTypes.SET_QUESTION :
+    case actionTypes.SET_QUESTION:
         console.log("setting question here",action.questions)
         return {
-            ...state, questions:action.questions,
+            ...state, questions:action.questions
+            
         };
     case actionTypes.CHANGE_TYPE:
         return {
@@ -51,6 +43,7 @@ const reducer = (state, action) => {
     default:
         return state;
   }
+  console.log("after setting the state",state);
 }
 
 export const StateContext = React.createContext();
@@ -60,21 +53,22 @@ export const StateContext = React.createContext();
 
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, initialstate)
+  const [state,stateDispatch] = useReducer(reducer, initialState)
 
   return (
     <div className="App"> 
-      <StateContext.Provider value={{initialstate:state, dispatch:dispatch}} >
+      <StateContext.Provider value={{initialstate:state, dispatch:stateDispatch}} >
       <BrowserRouter>
       <Routes>
         <Route path='/form/:id?' element={<><Formheader/><CenteredTabs/><QuestionForm/></>} />
-        <Route path='/response' element={<Userform/>} />
+        <Route path='/response' element={ <Userform/>} />
         <Route path='/' element={<><Header/><Template/><MainBody/></>}/>
       </Routes>
       </BrowserRouter>
       </StateContext.Provider>
     </div>
-  );
+  
+  )
 }
 
 export default App;

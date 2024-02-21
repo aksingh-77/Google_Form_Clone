@@ -208,7 +208,7 @@ const QuestionForm = () => {
     const commitToDB = () => {
         console.log("before dispatch");
         stateContext.dispatch({
-            type: actionTypes.SET_QUESTIONS,
+            type: actionTypes.SET_QUESTION,
             questions:questions
         })
         console.log("after dispatch");
