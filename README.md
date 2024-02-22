@@ -81,8 +81,8 @@ Google Form Clone provides users with the ability to create new forms, list exis
 * []()[![HTML][HTML.com]][HTML-url]
 * []()[![CSS][CSS.com]][CSS-url]
 * []()[![JavaScript][JavaScript.com]][JavaScript-url]
-* []()[![React.js][React-url]][React-url]
-* []()[![Node.js][Node-url]][Node-url]
+* []()[![React.js][React.js]][React-url]
+* []()[![Node.js][Node.js]][Node-url]
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
