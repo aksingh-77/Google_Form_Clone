@@ -8,6 +8,7 @@ import AppsIcon from '@mui/icons-material/Apps'
 import Avatar from '@mui/material/Avatar'
 import TemporaryDrawer from './TemporaryDrawer';
 
+
 const Header = () => {
     return (
         <div className='header'>

@@ -10,6 +10,7 @@ import contact from '../images/contact.png';
 import blank from '../images/blank.png';
 
 
+
 const Template = () => {
     const navigate = useNavigate();
     const createForm = () => {

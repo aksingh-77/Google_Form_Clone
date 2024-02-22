@@ -29,8 +29,7 @@ const reducer = (state, action) => {
     case actionTypes.SET_QUESTION:
         console.log("setting question here",action.questions)
         return {
-            ...state, questions:action.questions
-            
+            ...state, questions:action.questions 
         };
     case actionTypes.CHANGE_TYPE:
         return {
@@ -43,14 +42,10 @@ const reducer = (state, action) => {
     default:
         return state;
   }
-  console.log("after setting the state",state);
+  
 }
 
 export const StateContext = React.createContext();
-
-
-
-
 
 function App() {
   const [state,stateDispatch] = useReducer(reducer, initialState)

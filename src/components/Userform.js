@@ -7,11 +7,13 @@ import { StateContext } from '../App';
 
 
 function Userform() {
+    const { initialstate, dispatch } = useContext(StateContext);
+
     let quest = [];
     let post_answer = [];
     let navigate = useNavigate()
     let [answer,setAnswer] = useState([])
-    const { initialstate, dispatch } = useContext(StateContext);
+    
 
     //{ERROR HERE AS THE DATA FETCHED IS EMPTY WHICH IS PASSED FROM APP.JS}
     const questions =  initialstate?.map(({questions})=> questions) || [];
@@ -19,7 +21,7 @@ function Userform() {
     const doc_name = initialstate.doc_name || "Untitled Document";
     const doc_desc = initialstate.doc_desc || "Add form description";
     
-    console.log("questions from userform after redux",questions)
+    
 
     function select(que,option){
         let k =answer.findIndex((ele)=>(ele.question == que))

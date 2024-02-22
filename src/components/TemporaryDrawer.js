@@ -8,10 +8,7 @@ import ListItemText from '@mui/material/ListItemText'
 import Divider from '@mui/material/Divider';
 import {FiSettings} from 'react-icons/fi'
 import {BsQuestionCircle} from 'react-icons/bs'
-
 import '../css/TemporaryDrawer.css';
-
-
 import docs from '../images/docs.svg';
 import drive from '../images/drive.svg';
 import excelsheet from '../images/excelsheets.svg';
