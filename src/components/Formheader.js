@@ -15,20 +15,11 @@ import { FiSettings } from "react-icons/fi";
 import {useNavigate} from 'react-router-dom';
 import { StateContext } from "../App";
 
-
-
-
-
-
-
 const Formheader = () => {
     const navigate = useNavigate();
-    //const [{doc_name}, dispatch] = useStateValue();
-    const stateContext = useContext(StateContext);
-    const doc_name = stateContext.initialstate.document_name;
-    const dispatch = stateContext.dispatch;
-
-
+    const {State, dispatch} = useContext(StateContext);
+    const doc_name = State.document_name;
+    
     
     return (
         <div className="form_header">

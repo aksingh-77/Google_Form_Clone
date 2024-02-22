@@ -72,18 +72,18 @@ app.get('/data/:doc_id', (req, res) => {
     } else {
         console.log(`File not found for doc_id: ${docId}`);
         const defaultData = {"document_name":"Untitled Document",
-        "doc_desc":"Add Description",
-        "questions":[{"questionText":"Question here",
-                    "questionType":"radio",
-                    "option":[{"optionText":"Option 1"},
-                                {"optionText":"Option 2"}],
-                    "answer":false,
-                    "answerKey":"Bengaluru",
-                    "points":"2",
-                    "open":true,
-                    "required":false
-                }]
-            };
+                            "doc_desc":"Add Description",
+                            "questions":[{"questionText":"Question...",
+                                        "questionType":"radio",
+                                        "option":[{"optionText":"Options..."},
+                                                    {"optionText":"Options..."}],
+                                        "answer":false,
+                                        "answerKey":"",
+                                        "points":0,
+                                        "open":true,
+                                        "required":false
+                                        }]
+                            };
         res.send(defaultData);
     }
 });

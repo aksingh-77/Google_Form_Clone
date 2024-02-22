@@ -34,43 +34,33 @@ import { actionTypes } from '../App';
 import { StateContext } from '../App';
 
 const QuestionForm = () => {
-    const [questions, setQuestions] = useState([
-        {questionText: "Question ", 
-         questionType:"radio", 
-         option: [{optionText:"Option 1"}, 
-                 {optionText:"Option 2"}, 
-                 {optionText:"Option 3"}],
-         answer:false,
-         answerKey:"",
-         points:0, 
-         open:true, 
-         required: false
-        }
-    ])
+    const [document_name, setDocumentName] = useState("Untitled Document");
+    const [doc_desc, setDocumentDesc] = useState("Add Description");
+    const {State, dispatch} = useContext(StateContext);
 
-    const [documentName, setDocumentName] = useState("Untitled Document");
-    const [documentDesc, setDocumentDesc] = useState("Add Description");
-    const stateContext = useContext(StateContext);
-    // console.log(stateContext);
+    const [questions, setQuestions] = useState([]);
 
+    useEffect (()=>{ 
+        console.log('in hooks!')
+        data_adding()
+    }, [])
+    
+    //This Method is to fetch the the id from the url using uuid
     const getId = () => {
         let currentURL = window.location.href;
         let parts = currentURL.split('/');
         let value = parts[parts.length - 1];
-        console.log(value);
         return value;
     }
 
-    
+    //This method is to change the questionText value
     function ChangeQuestion(text, i){
         var newQuestion = [...questions];
         newQuestion[i].questionText = text;
         setQuestions(newQuestion);
-        //setQuestions([...questions, questions[i].questionText = text]);
-        console.log(questions);
-
     }
 
+    //This method is to update the questionType, default type is given as radio
     const addQuestionType = (i, type) => {
         let qs = [...questions];
         qs[i].questionType = type;
@@ -78,6 +68,7 @@ const QuestionForm = () => {
         console.log(questions);
     }
 
+    //This question is to update the values in options
     const changeOptionValue = (value, i, j) => {
         let qs = [...questions];
         qs[i].option[j].optionText = value;
@@ -90,7 +81,6 @@ const QuestionForm = () => {
             qs[i].option.splice(j, 1);
             setQuestions(qs);
         }
-        // console.log(i+--+j)
     }
 
     const addOption = i =>{
@@ -101,7 +91,6 @@ const QuestionForm = () => {
             console.log("Max 5 Options");
         }
         setQuestions(qs)
-        console.log(questions)
     }
 
     const copyQuestion = i => {
@@ -123,7 +112,6 @@ const QuestionForm = () => {
         var qs = [...questions];
         qs[i].required = !qs[i].required;
         setQuestions(qs);
-        console.log(questions);
     }
 
     const addMoreQuestionField = () => {
@@ -184,15 +172,12 @@ const QuestionForm = () => {
         let Questions = [...questions];
         Questions[qno].points = points;
         setQuestions(Questions);
-        console.log("setted points", questions);
     }
 
     const doneAnswer = i => {
         let Questions = [...questions];
         Questions[i].answer = !Questions[i].answer;
         setQuestions(Questions);
-        console.log('after done answer',questions);
-
     }
 
     const addAnswer = i => {
@@ -200,21 +185,28 @@ const QuestionForm = () => {
         console.log("Hello here")
         Questions[i].answer = !Questions[i].answer;
         setQuestions(Questions);
-        console.log(questions);
     }
 
     let id = getId();
     const commitToDB = () => {
-        console.log("before dispatch");
-        stateContext.dispatch({
+        dispatch({
             type: actionTypes.SET_QUESTION,
             questions:questions
         })
-        console.log("after dispatch");
+
+        dispatch({
+            type: actionTypes.SET_DOC_NAME,
+            doc_name:document_name
+        })
+
+        dispatch({
+            type: actionTypes.SET_DOC_DESC,
+            doc_desc:doc_desc
+        })
 
         axios.post(`http://127.0.0.1:9000/add_questions/${id}`,{
-            "document_name":documentName,
-            "doc_desc":documentDesc,
+            "document_name":document_name,
+            "doc_desc":doc_desc,
             "questions":questions,   
         }).then(response => {
             console.log(response.data);
@@ -224,46 +216,43 @@ const QuestionForm = () => {
 
     }
 
-    useEffect (()=>{ 
-        async function data_adding(){ 
-            const request = await axios.get( `http://localhost:9000/data/${id}`);
-            setQuestions(request.data.questions);
-            console.log("request data from api",request.data)
-            const doc_name=request.data.document_name ||"Untitled Document"
-            const doc_descip = request.data.doc_desc || "Form Description"
-            console.log(doc_name+" "+doc_descip)
-            setDocumentName(doc_name)
-            setDocumentDesc (doc_descip)
-            let question_data = [...questions]
-            console.log("onsole log within useEffect",questions);
-            stateContext.dispatch({
-                type: actionTypes.SET_DOC_NAME,
-                doc_name: doc_name
-            })
-            stateContext.dispatch({
-                type: actionTypes.SET_DOC_DESC,
-                doc_desc: doc_descip
-            })
-            stateContext.dispatch({
-                type: actionTypes.SET_QUESTIONS,
-                questions: question_data
-            })
-        }
-        data_adding()
-        }, [])
+    async function data_adding(){ 
+        console.log('triggering api!')
+        const request = await axios.get(`http://localhost:9000/data/${id}`);
+        console.log(request.data)
+        setQuestions(request.data.questions);
+        const doc_name=request.data.document_name;
+        const doc_descip = request.data.doc_desc;
+        
+        setDocumentName(doc_name)
+        setDocumentDesc (doc_descip)
+        let question_data = [...questions]
 
-        function changeQuestion (text, i){
-            var newQuestion = [...questions];
-            newQuestion[i].questionText = text;
-            setQuestions (newQuestion);
-            console.log(newQuestion)
-        }
+        dispatch({
+            type: actionTypes.SET_DOC_NAME,
+            doc_name: doc_name
+        })
+        dispatch({
+            type: actionTypes.SET_DOC_DESC,
+            doc_desc: doc_descip
+        })
+        dispatch({
+            type: actionTypes.SET_QUESTIONS,
+            questions: question_data
+        })
+    }
+
+    // function changeQuestion (text, i){
+    //     var newQuestion = [...questions];
+    //     newQuestion[i].questionText = text;
+    //     setQuestions (newQuestion);
+    // }
 
     
         //setQuestions(question_data || questions);
     function questionUI(){
         // return (<><h1>Question Bank</h1></>)
-        console.log({questions})
+        
         return questions.map((ques, i) => (
         <Draggable key={i} draggableId={i + 'id'} index={i}>
             {(provided, snapshot) => (

@@ -7,19 +7,18 @@ import { StateContext } from '../App';
 
 
 function Userform() {
-    const { initialstate, dispatch } = useContext(StateContext);
+    const { State, dispatch } = useContext(StateContext);
+    console.log(State);
 
     let quest = [];
-    let post_answer = [];
     let navigate = useNavigate()
     let [answer,setAnswer] = useState([])
     
 
     //{ERROR HERE AS THE DATA FETCHED IS EMPTY WHICH IS PASSED FROM APP.JS}
-    const questions =  initialstate?.map(({questions})=> questions) || [];
-    console.log({initialstate});
-    const doc_name = initialstate.doc_name || "Untitled Document";
-    const doc_desc = initialstate.doc_desc || "Add form description";
+    const questions =  State.questions;
+    const doc_name = State.document_name || "Untitled Document";
+    const doc_desc = State.doc_desc || "Add description";
     
     
 

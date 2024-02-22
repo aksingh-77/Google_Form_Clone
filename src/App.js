@@ -1,5 +1,4 @@
 import logo from './logo.svg';
-// import './App.css';
 import React, {useReducer, useState} from 'react';
 import Header from './components/Header';
 import Template from './components/Template';
@@ -8,11 +7,21 @@ import { BrowserRouter, Routes,Route } from 'react-router-dom';
 import Formheader from './components/Formheader';
 import CenteredTabs from './components/CenteredTabs';
 import QuestionForm from './components/QuestionForm';
-//import { StateProvider } from './redux/StateProvider';
-//import reducer, {initialstate} from './redux/reducer';
 import Userform from './components/Userform';
 
-export const initialState = [];
+export const initialState = {"document_name":"Untitled Document",
+                            "doc_desc":"Add Description",
+                            "questions":[{"questionText":"Question...",
+                                          "questionType":"radio",
+                                          "option":[{"optionText":"Options..."},
+                                                    {"optionText":"Options..."}],
+                                          "answer":false,
+                                          "answerKey":"",
+                                          "points":0,
+                                          "open":true,
+                                          "required":false
+                                        }]
+                            };
   
 
 
@@ -23,25 +32,31 @@ export const actionTypes = {
   SET_DOC_DESC: "SET_DOC_DESC"
 }
 
+
+
 const reducer = (state, action) => {
 
   switch(action.type){
     case actionTypes.SET_QUESTION:
-        console.log("setting question here",action.questions)
+        console.log('value updating questions');
+        console.log(action.questions)
         return {
-            ...state, questions:action.questions 
-        };
-    case actionTypes.CHANGE_TYPE:
-        return {
-            ...state, questionType:action.questionType,
+            ...state, questions:action.questions
         };
     case actionTypes.SET_DOC_NAME :
         return {
-            ...state, doc_name:action.doc_name,
+            ...state, document_name:action.doc_name,
         };
-    default:
+    case actionTypes.SET_DOC_DESC:
+        return {
+          ...state, doc_desc:action.doc_desc
+        }
+    default:{
         return state;
+    }
+    
   }
+  
   
 }
 
@@ -52,7 +67,7 @@ function App() {
 
   return (
     <div className="App"> 
-      <StateContext.Provider value={{initialstate:state, dispatch:stateDispatch}} >
+      <StateContext.Provider value={{State:state, dispatch:stateDispatch}} >
       <BrowserRouter>
       <Routes>
         <Route path='/form/:id?' element={<><Formheader/><CenteredTabs/><QuestionForm/></>} />
