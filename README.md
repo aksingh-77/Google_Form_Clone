@@ -219,7 +219,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Abhishek Singh - [![Linkedin][linkedin-shield]][linkedin-url] || [![GitHub][Github-shield]][github-url]
 
-Project Link: [Flash E-Commerce App](https://github.com/aksingh-77/Google_Form_Clone)
+Project Link: [Google Form Clone](https://github.com/aksingh-77/Google_Form_Clone)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <!-- ================================================================================================================================== -->
