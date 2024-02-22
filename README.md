@@ -266,7 +266,7 @@ Project Link: [Flash E-Commerce App](https://github.com/aksingh-77/Google_Form_C
 [Next-url]: https://nextjs.org/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
-[Node.js]:https://img.shields.io/badge/Node-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[Node.js]:https://img.shields.io/badge/Node-20232A?style=for-the-badge&logo=node.js&logoColor=61DAFB
 [Node-url]:https://nodejs.org/docs/latest/api/
 [Vue.js]: https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D
 [Vue-url]: https://vuejs.org/
