@@ -72,14 +72,16 @@ function Userform() {
 
 
 function submit(){
-   answer?.map((ele)=>{
+    answer?.map((ele)=>{
     post_answer_data[ele.question] = ele.answer
    })
    
-  axios.post(`http://localhost:9000/student_response/${doc_name}`,{
-      "column": quest,
-      "answer_data" :[post_answer_data]
-  })
+    axios.post(`http://localhost:9000/student_response/${doc_name}`,{
+        "column": quest,
+        "answer_data" :[post_answer_data]
+    })
+
+    navigate(`/`)
 
   
 
@@ -164,7 +166,7 @@ function submit(){
                 }         
                  
             <div className="user_form_submit">
-              <Button  variant="contained" color="primary" onClick={()=> navigate(`/submitted`)} style={{fontSize:"14px"}}>Submit</Button>
+              <Button  variant="contained" color="primary" onClick={()=> submit()} style={{fontSize:"14px"}}>Submit</Button>
 
             </div>
        

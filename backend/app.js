@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const app = express();
+const Excel = require('exceljs');
 
 
 var cors = require('cors') // CORS --> Cross Origin Resource Sharing
@@ -97,5 +98,30 @@ app.get('/get_all_filenames',(req,res) => {
         res.send(files);    
     });
 })
+
+
+app.post(`/student_response/:doc_id`, (req, res) => {
+    const { body, params: { doc_id } } = req;
+
+    const workbook = new Excel.Workbook();
+    const worksheet = workbook.addWorksheet(doc_id);
+
+    // Set up worksheet columns
+    worksheet.columns = [{ header: "Time Stamp", key: "datatime" }, ...body.column];
+    worksheet.columns.forEach(column => column.width = Math.max(12, column.header.length));
+    worksheet.getRow(1).font = { bold: true };
+
+    // Add student responses to worksheet
+    body.answer_data.forEach((response, index) => {
+        const rowIndex = index + 2;
+        worksheet.addRow({ date: new Date(), ...response });
+    });
+
+    // Write workbook to file
+    workbook.xlsx.writeFile(`${doc_id}.xlsx`)
+        .then(() => res.send('Data saved successfully'))
+        .catch(error => res.status(500).send(`Error saving data: ${error.message}`));
+});
+
 
 app.listen (9000, ()=>{console.log('expresss server is running at port nnumber 9000')})
